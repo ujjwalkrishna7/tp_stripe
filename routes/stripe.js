@@ -9,11 +9,10 @@ const stripe = Stripe(process.env.STRIPE_KEY);
 const router = express.Router();
 
 router.post("/create-checkout-session", async (req, res) => {
-  console.log(req.body);
   const customer = await stripe.customers.create({
     metadata: {
-      userId: req.body.userId,
-      cart: JSON.stringify(req.body.cartItems),
+      userId: req.body.user.id,
+      cart: JSON.stringify(req.body.items),
     },
   });
 
@@ -29,7 +28,7 @@ router.post("/create-checkout-session", async (req, res) => {
             id: item.id,
           },
         },
-        unit_amount: item.price * 100,
+        unit_amount: item.amount * 100,
       },
       quantity: item.quantity,
     };
